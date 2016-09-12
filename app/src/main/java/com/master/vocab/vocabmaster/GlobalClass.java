@@ -16,8 +16,8 @@ import retrofit.android.AndroidLog;
 public class GlobalClass extends Application{
 
     private static GlobalClass _instance = null;
-    private String username;
-    private String api_key;
+    private String username = "sahil";
+    private String api_key = "fd5a54d8b3a1a927014b61df9ab79ec4316fe650";
     private static RestAdapter restAdapter = null;
 
     private GlobalClass(){
@@ -48,7 +48,7 @@ public class GlobalClass extends Application{
         if(restAdapter==null){
             restAdapter = new RestAdapter.Builder()
                     .setEndpoint(URLClass.BASE_URL)
-                    .setLogLevel(RestAdapter.LogLevel.NONE).setLog(new AndroidLog("SDM"))
+                    .setLogLevel(RestAdapter.LogLevel.FULL).setLog(new AndroidLog("vocab"))
                     .setLogLevel(RestAdapter.LogLevel.FULL)
                     .setConverter(new StringConverter())
                     .setRequestInterceptor(new RequestInterceptor() {

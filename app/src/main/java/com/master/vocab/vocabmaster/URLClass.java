@@ -5,7 +5,6 @@ package com.master.vocab.vocabmaster;
  */
 public class URLClass {
 
-    public static final String BASE_URL= "http://192.168.1.248:8080/";
-
+    public static final String BASE_URL= "http://vocabmaestro.com/cardapp/api/v1/";
 
 }

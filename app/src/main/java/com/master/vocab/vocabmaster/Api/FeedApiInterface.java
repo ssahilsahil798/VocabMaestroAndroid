@@ -1,10 +1,12 @@
 package com.master.vocab.vocabmaster.Api;
 
+import retrofit.Callback;
 import retrofit.http.Field;
 import retrofit.http.FormUrlEncoded;
 import retrofit.http.GET;
 import retrofit.http.POST;
 import retrofit.http.Path;
+import retrofit.http.Query;
 
 /**
  * Created by sahildeswal on 02/09/16.
@@ -13,21 +15,22 @@ public interface FeedApiInterface {
 
     @FormUrlEncoded
     @POST("user/auth/login")
-    public void manualLogin(@Field("username") String username, @Field("password") String password);
+    public void manualLogin(@Field("username") String username, @Field("password") String password, Callback<String> cb);
 
     @FormUrlEncoded
     @POST("user/register")
-    public void manualRegister(@Field("username") String username, @Field("password") String password);
+    public void manualRegister(@Field("username") String username, @Field("password") String password, Callback<String> cb);
 
     @GET("/cardstatus")
-    public void getUserCardStatus();
+    public void getUserCardStatus(Callback<String> cb);
 
     @GET("/wordstatus")
-    public void getCategoryWordStatus(@Path("card_status") String card_status);
+    public void getCategoryWordStatus(@Query("card_status") int card_status, @Query("limit") int limit,
+                                      @Query("offset") int offset, Callback<String> cb);
 
     @FormUrlEncoded
     @POST("/wordstatus")
-    public void changeWordStatus(@Field("id") String word_id, @Field("word_status") String word_status);
+    public void changeWordStatus(@Field("id") String word_id, @Field("word_status") String word_status, Callback<String> cb);
 
 
 }

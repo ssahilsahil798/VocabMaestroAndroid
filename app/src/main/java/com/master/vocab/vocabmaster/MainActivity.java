@@ -1,10 +1,12 @@
 package com.master.vocab.vocabmaster;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.SubMenu;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -15,13 +17,25 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
+import com.master.vocab.vocabmaster.Activity.WordActivity;
 import com.master.vocab.vocabmaster.Adapter.CardAdapter;
+import com.master.vocab.vocabmaster.Api.ApiClient;
 import com.master.vocab.vocabmaster.Models.Cards;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -37,17 +51,10 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        listCards = new ArrayList<>();
-        int i = 0;
-        while(i <20){
-            Cards card = new Cards();
-            card.setCardCategory(i + "");
-            listCards.add(card);
-            i++;
-        }
-        listView = (ListView)findViewById(R.id.cards_recycler_view);
-        listAdapter = new CardAdapter(this, listCards);
-        listView.setAdapter(listAdapter);
+
+
+
+
 
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -64,6 +71,60 @@ public class MainActivity extends AppCompatActivity
         topChannelMenu.add("Foo");
         topChannelMenu.add("Bar");
         topChannelMenu.add("Baz");
+    }
+
+    private void fetchListCards() {
+
+        ApiClient.getFeedApiInterface().getUserCardStatus(new Callback<String>() {
+            @Override
+            public void success(String s, Response response) {
+                Log.d("check", s);
+                try {
+                    JSONObject object = new JSONObject(s);
+                    JSONArray objs = object.getJSONArray("objects");
+                    for(int i=0;i<objs.length();i++){
+                        Cards card = new Cards();
+                        JSONObject jsonCard = objs.optJSONObject(i);
+                        card.CardCategory = jsonCard.optJSONObject("category").optString("category");
+                        card.CardCategoryId = jsonCard.optJSONObject("category").optInt("id");
+                        card.total_words = jsonCard.optInt("total_words");
+                        card.words_completed = jsonCard.optInt("words_completed");
+                        listCards.add(card);
+                        listAdapter.notifyDataSetChanged();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                if(null != getApplicationContext()){
+                    Toast.makeText(getApplicationContext(), error.toString() + "", Toast.LENGTH_LONG).show();
+                }
+
+
+
+            }
+        });
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        listCards = new ArrayList<>();
+        fetchListCards();
+        listView = (ListView)findViewById(R.id.cards_recycler_view);
+        listAdapter = new CardAdapter(this, listCards);
+        listView.setAdapter(listAdapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Intent intent = new Intent(MainActivity.this, WordActivity.class);
+                intent.putExtra("card", listCards.get(i).CardCategoryId);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override

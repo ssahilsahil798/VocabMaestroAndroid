@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.master.vocab.vocabmaster.MainActivity;
@@ -55,16 +56,31 @@ public class CardAdapter extends BaseAdapter{
         }
 
         Cards card = getItem(i);
-        mViewHolder.tvTitle.setText(card.getCardCategory() + "");
+        mViewHolder.tvTitle.setText("Card #" + card.CardCategory + "");
+        mViewHolder.totalWords.setText(card.total_words + "");
+        mViewHolder.wordsCompleted.setText(card.words_completed + "");
+        mViewHolder.percentage.setText(((int)((float)card.words_completed/(float) card.total_words)*100) + "");
+
+
         return convertView;
     }
 
     private class MyViewHolder {
         TextView tvTitle;
+        TextView totalWords;
+        TextView wordsCompleted;
+        TextView percentage;
+
+        ProgressBar progressBar;
 
 
         public MyViewHolder(View item) {
             tvTitle = (TextView) item.findViewById(R.id.cardTitle);
+            totalWords = (TextView) item.findViewById(R.id.words_total);
+            wordsCompleted = (TextView) item.findViewById(R.id.words_completed);
+            percentage = (TextView) item.findViewById(R.id.percentage_completed);
+            progressBar = (ProgressBar) item.findViewById(R.id.progress_card);
+
 
         }
     }

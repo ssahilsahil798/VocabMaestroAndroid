@@ -5,15 +5,24 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.CheckBox;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.master.vocab.vocabmaster.Activity.WordActivity;
+import com.master.vocab.vocabmaster.Api.ApiClient;
 import com.master.vocab.vocabmaster.Models.Cards;
 import com.master.vocab.vocabmaster.Models.WordStatus;
 import com.master.vocab.vocabmaster.R;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /**
  * Created by sahildeswal on 13/09/16.
@@ -57,27 +66,87 @@ public class WordListAdapter extends BaseAdapter{
             mViewHolder = (MyViewHolder) convertView.getTag();
         }
 
-        WordStatus word = getItem(i);
+        final WordStatus word = getItem(i);
         mViewHolder.wordNumb.setText("#" + word.word_number + "");
         mViewHolder.wordTitle.setText(word.word);
+        mViewHolder.checkBox.setOnCheckedChangeListener(null);
+        if(Integer.parseInt(word.word_status) == 1){
+            mViewHolder.checkBox.setChecked(true);
+        }else{
+            mViewHolder.checkBox.setChecked(false);
+        }
+
+        mViewHolder.checkBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(Integer.parseInt(word.word_status) == 1){
+                    ApiClient.getFeedApiInterface().changeWordStatus(word.word_id +"", 0 +"", new Callback<String>() {
+                        @Override
+                        public void success(String s, Response response) {
+                            try {
+                                JSONObject obj = new JSONObject(s);
+                                boolean updated = Boolean.parseBoolean(obj.optString("updated"));
+                                if(updated == true)
+                                {
+                                    word.word_status = 0 + "";
+                                    notifyDataSetChanged();
+                                }
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
 
 
+                        }
+
+                        @Override
+                        public void failure(RetrofitError error) {
+                            word.word_status = 1 + "";
+                            notifyDataSetChanged();
+                        }
+                    });
+                }else{
+                    ApiClient.getFeedApiInterface().changeWordStatus(word.word_id +"", 1 +"", new Callback<String>() {
+                        @Override
+                        public void success(String s, Response response) {
+                            try {
+                                JSONObject obj = new JSONObject(s);
+                                boolean updated = Boolean.parseBoolean(obj.optString("updated"));
+                                if(updated == true)
+                                {
+                                    word.word_status = 1 + "";
+                                    notifyDataSetChanged();
+                                }
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                        @Override
+                        public void failure(RetrofitError error) {
+                            word.word_status = 0 + "";
+                            notifyDataSetChanged();
+                        }
+                    });
+                }
+
+            }
+        });
         return convertView;
     }
 
     private class MyViewHolder {
         TextView wordNumb;
         TextView wordTitle;
+        CheckBox checkBox;
 
 
 
         public MyViewHolder(View item) {
             wordNumb = (TextView) item.findViewById(R.id.word_number);
             wordTitle = (TextView) item.findViewById(R.id.word_title);
-
-
-
-
+            checkBox = (CheckBox)item.findViewById(R.id.word_check_box);
         }
 }
 }

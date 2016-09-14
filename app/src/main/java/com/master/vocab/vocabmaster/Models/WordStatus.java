@@ -1,9 +1,11 @@
 package com.master.vocab.vocabmaster.Models;
 
+import java.io.Serializable;
+
 /**
  * Created by sahildeswal on 12/09/16.
  */
-public class WordStatus {
+public class WordStatus implements Serializable {
 
     public int word_number;
     public String card_status;

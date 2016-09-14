@@ -1,5 +1,6 @@
 package com.master.vocab.vocabmaster;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -43,6 +44,7 @@ public class MainActivity extends AppCompatActivity
     private List<Cards> listCards;
     private CardAdapter listAdapter;
     private ListView listView;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,6 +97,7 @@ public class MainActivity extends AppCompatActivity
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+                progressDialog.hide();
             }
 
             @Override
@@ -102,7 +105,7 @@ public class MainActivity extends AppCompatActivity
                 if(null != getApplicationContext()){
                     Toast.makeText(getApplicationContext(), error.toString() + "", Toast.LENGTH_LONG).show();
                 }
-
+                progressDialog.hide();
 
 
             }
@@ -113,6 +116,10 @@ public class MainActivity extends AppCompatActivity
     protected void onPostResume() {
         super.onPostResume();
         listCards = new ArrayList<>();
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Loading Cards");
+        progressDialog.setIndeterminate(true);
+        progressDialog.show();
         fetchListCards();
         listView = (ListView)findViewById(R.id.cards_recycler_view);
         listAdapter = new CardAdapter(this, listCards);

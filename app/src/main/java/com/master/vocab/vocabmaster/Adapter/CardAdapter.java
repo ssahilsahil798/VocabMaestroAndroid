@@ -59,8 +59,8 @@ public class CardAdapter extends BaseAdapter{
         mViewHolder.tvTitle.setText("Card #" + card.CardCategory + "");
         mViewHolder.totalWords.setText(card.total_words + "");
         mViewHolder.wordsCompleted.setText(card.words_completed + "");
-        mViewHolder.percentage.setText(((int)((float)card.words_completed/(float) card.total_words)*100) + "");
-
+        mViewHolder.percentage.setText(Math.round((card.words_completed*100.0f/card.total_words)*100)/100.0f + " %");
+        mViewHolder.progressBar.setProgress((int) (Math.round(card.words_completed*100.0f/card.total_words)*100/100.0f));
 
         return convertView;
     }

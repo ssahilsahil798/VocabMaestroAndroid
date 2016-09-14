@@ -37,7 +37,9 @@
 
 
         <CheckBox
+            android:id="@+id/word_check_box"
             android:layout_weight="1"
+            android:focusable="false"
             android:layout_width="0dp"
             android:layout_gravity="center"
             android:gravity="center"

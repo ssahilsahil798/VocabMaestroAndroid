@@ -16,15 +16,12 @@ import retrofit.android.AndroidLog;
 public class GlobalClass extends Application{
 
     private static GlobalClass _instance = null;
-    private String username = "sahil";
-    private String api_key = "fd5a54d8b3a1a927014b61df9ab79ec4316fe650";
+    private static String username = "";
+    private static String api_key = "";
     private static RestAdapter restAdapter = null;
+    private SharedPrefs sharedPrefs = null;
 
-    private GlobalClass(){
-
-    }
-
-    public static GlobalClass get_instance(){
+    public static GlobalClass getInstance(){
         if(_instance == null){
             _instance = new GlobalClass();
 
@@ -32,19 +29,33 @@ public class GlobalClass extends Application{
         return _instance;
     }
 
+    public GlobalClass(){
+        _instance = this;
+    }
+
+
     @Override
     public void onCreate() {
         super.onCreate();
 
+        getSharedPrefs();
         getGlobalApiParams(getApplicationContext());
     }
 
-    private void getGlobalApiParams(Context applicationContext) {
+    public SharedPrefs getSharedPrefs(){
+        if(sharedPrefs == null){
+            sharedPrefs = new SharedPrefs();
+        }
+        return sharedPrefs;
+    }
+
+    private static void getGlobalApiParams(Context applicationContext) {
         api_key = SharedPrefs.getString(applicationContext, "api_key", "");
         username = SharedPrefs.getString(applicationContext, "username", "");
     }
 
     public RestAdapter getRestAdapter(){
+
         if(restAdapter==null){
             restAdapter = new RestAdapter.Builder()
                     .setEndpoint(URLClass.BASE_URL)

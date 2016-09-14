@@ -18,13 +18,13 @@ public interface FeedApiInterface {
 
     @Headers("content-type: application/x-www-form-urlencoded")
     @FormUrlEncoded
-    @POST("user/auth/login")
+    @POST("/user/auth/login/")
     public void manualLogin(@Field("username") String username, @Field("password") String password, Callback<String> cb);
 
     @Headers("content-type: application/x-www-form-urlencoded")
     @FormUrlEncoded
-    @POST("user/register")
-    public void manualRegister(@Field("username") String username, @Field("password") String password, Callback<String> cb);
+    @POST("/user/register/")
+    public void manualRegister(@Field("username") String username, @Field("password") String password, @Field("email") String email, Callback<String> cb);
 
     @GET("/cardstatus")
     public void getUserCardStatus(Callback<String> cb);

@@ -26,6 +26,7 @@ import com.master.vocab.vocabmaster.Activity.WordActivity;
 import com.master.vocab.vocabmaster.Adapter.CardAdapter;
 import com.master.vocab.vocabmaster.Api.ApiClient;
 import com.master.vocab.vocabmaster.Models.Cards;
+import com.master.vocab.vocabmaster.SharedPref.SharedPrefs;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -54,11 +55,7 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
 
-
-
-
-
-
+        Log.d("check", SharedPrefs.getString(getApplicationContext(), "username", "") + " this is username");
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -69,10 +66,9 @@ public class MainActivity extends AppCompatActivity
         navView.setNavigationItemSelectedListener(this);
 
         Menu m = navView.getMenu();
-        SubMenu topChannelMenu = m.addSubMenu("Top Channels");
-        topChannelMenu.add("Foo");
-        topChannelMenu.add("Bar");
-        topChannelMenu.add("Baz");
+        SubMenu topChannelMenu = m.addSubMenu("Upcoming");
+        topChannelMenu.add("Verbal Reasoning");
+        topChannelMenu.add("Quantitative Reasoning");
     }
 
     private void fetchListCards() {
@@ -147,7 +143,6 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        MenuItem item = menu.add("first");
         return true;
     }
 

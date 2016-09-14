@@ -13,7 +13,7 @@ public class ApiClient {
 
 
         public static RestAdapter getRestAdapter() {
-            return GlobalClass.get_instance().getRestAdapter();
+            return GlobalClass.getInstance().getRestAdapter();
         }
 
         public static FeedApiInterface getFeedApiInterface() {

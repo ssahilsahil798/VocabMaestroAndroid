@@ -38,7 +38,7 @@ public class SharedPrefs {
     }
 
     public static void clearSharedPrefs(){
-        SharedPreferences s = getSharedPreferences(GlobalClass.get_instance().getApplicationContext(), getKeyValueStoreName());
+        SharedPreferences s = getSharedPreferences(GlobalClass.getInstance().getApplicationContext(), getKeyValueStoreName());
         s.edit().clear().commit();
     }
 
